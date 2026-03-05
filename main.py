@@ -6,6 +6,7 @@ import signal, sys, types
 from termcolor import colored
 from scraper import fetch
 
+
 def def_handler(sig: int, frame: types.FrameType | None) -> None:
     print(colored("Exiting...\n", "red"))
     sys.exit(1)
@@ -28,15 +29,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print(f"Searching for: {args.query.capitalize()}\n")
+    print(colored(f"\n[+] Searching for: {args.query.title()}\n", "green"))
 
     offers = fetch(args.query)
 
-    if offers is None:
-        print(colored("[-] Game not found or request failed.", "red"))
+    if not offers:
+        print(colored("[-] No offers found.", "red"))
         sys.exit(1)
 
-    for offer in offers:
-        print(offer)
-
-
+    for i, offer in enumerate(offers, start=1):
+        print(f"[{i}] {offer.store:<15} {offer.price:<10} {offer.link}")
+    
